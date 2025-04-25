@@ -1,0 +1,29 @@
+version: '2.4'
+volumes:
+  firmware-volume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind,rshared,rw
+      device: /run/mount
+services:
+  hailo-infer:
+    tty: true
+    build:
+      context: ./hailo-infer
+    restart: always
+    devices:
+      - /dev/hailo0:/dev/hailo0
+    depends_on:
+      - hailo-init
+  hailo-init:
+    tty: true
+    build:
+      context: ./hailo-init
+    labels:
+      io.balena.features.kernel-modules: '1'
+    restart: on-failure
+    privileged: true
+    network_mode: host
+    volumes:
+      - 'firmware-volume:/data'
