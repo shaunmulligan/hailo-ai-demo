@@ -13,9 +13,6 @@ assets:
       url: >-
         https://raw.githubusercontent.com/shaunmulligan/balena-hailo/master/logo.png
 data:
-  applicationEnvironmentVariables:
-    - SOUND_VOLUME: 75
-    - AUDIO_OUTPUT: AUTO
   defaultDeviceType: raspberrypi5
   supportedDeviceTypes:
     - raspberrypi5

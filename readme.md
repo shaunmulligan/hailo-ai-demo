@@ -15,3 +15,19 @@ In order to make use of Gen 3 PCI, set device overlays to:
 ```
 "vc4-kms-v3d,cma-320","dwc2,dr_mode=host","dwc2,dr_mode=host,pciex1_gen=3"
 ```
+
+## Testing:
+
+Check that hailo_service is running:
+```
+root@e72577fb98d2:~# supervisorctl status
+hailort_service                  RUNNING   pid 26, uptime 0:03:15
+```
+Test that multi-process processing works:
+
+```
+root@e72577fb98d2:~/models# hailortcli run2 --multi-process-service set-net yolov8s-hailo8l.hef set-net scrfd_2.5g-hailo8l.hef
+[===================>] 100% 00:00:00
+yolov8s:    fps: 21.52
+scrfd_2_5g: fps: 23.23
+```

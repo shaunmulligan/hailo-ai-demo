@@ -22,7 +22,7 @@ services:
       context: ./hailo-init
     labels:
       io.balena.features.kernel-modules: '1'
-    restart: on-failure
+    restart: always
     privileged: true
     # network_mode: host
     volumes:
