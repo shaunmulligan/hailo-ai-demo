@@ -62,4 +62,4 @@ scrfd_2_5g: fps: 23.23
     - It might be possible if we could configure the path of the socket, have asked about this on the hailo forum: https://community.hailo.ai/t/is-it-possible-to-change-the-default-tmp-hailort-uds-sock-location-for-hailort-service/14340 
 
 - [ ] Try reduce priviledge of container down to SYS_ADMIN only
-- [ ] Try install only hailofw/stable,now 4.20.0-1  and hailort/stable,now 4.20.0-1
+- [x] Try install only the essential hailo bits rather than full `hailo-all`
