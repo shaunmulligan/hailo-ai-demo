@@ -28,7 +28,7 @@ RUN echo '#!/bin/bash\nexit 0' > /usr/bin/systemctl && chmod +x /usr/bin/systemc
 RUN mkdir -p /run/systemd && echo 'docker' > /run/systemd/container
 
 # We specifically target 4.20.0, other versions should work with the kernel driver but that is untested.
-RUN apt-get install -y --no-install-recommends hailo-all=4.20.0
+RUN apt-get install -y --no-install-recommends hailo-dkms python3-hailort
 
 # Copy our wrapper script that sets up hailo_service process
 COPY hailort_service_wrapper /usr/local/bin/hailort_service_wrapper
