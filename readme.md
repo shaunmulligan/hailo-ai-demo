@@ -8,6 +8,7 @@ Clone this project and then run the following from the root of the project, wher
 ```
 balena push myFleet
 ```
+![Device Dashboard](docs/images/device-dashboard.png)
 
 ## Configuration
 
@@ -15,6 +16,8 @@ In order to make use of Gen 3 PCI, ensure that your device overlay setting on `h
 ```
 "vc4-kms-v3d,cma-320","dwc2,dr_mode=host","dwc2,dr_mode=host,pciex1_gen=3"
 ```
+
+![Device Config](docs/images/configuration.png)
 
 ## Testing:
 
@@ -36,11 +39,11 @@ scrfd_2_5g: fps: 23.23
 ```
 
 ## TODO:
-[ ] Write Documentation
-[x] Get basic /dev/hailo0 device and kernel module working
-[x] try socket approach for multiprocess inference
+- [ ] Write Documentation
+- [x] Get basic /dev/hailo0 device and kernel module working
+- [x] try socket approach for multiprocess inference
     - ~~try symlink /tmp/socket into a shared volume for other containers to make use of.~~ This didn't work :(
     - It might be possible if we could configure the path of the socket, have asked about this on the hailo forum: https://community.hailo.ai/t/is-it-possible-to-change-the-default-tmp-hailort-uds-sock-location-for-hailort-service/14340 
 
-[ ] Try reduce priviledge of container down to SYS_ADMIN only
-[ ] Try install only hailofw/stable,now 4.20.0-1  and hailort/stable,now 4.20.0-1
+- [ ] Try reduce priviledge of container down to SYS_ADMIN only
+- [ ] Try install only hailofw/stable,now 4.20.0-1  and hailort/stable,now 4.20.0-1
