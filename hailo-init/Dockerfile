@@ -42,10 +42,12 @@ COPY supervisord.conf /etc/supervisor/supervisord.conf
 # Make startup.sh executable
 RUN chmod +x /usr/local/bin/startup.sh
 
+COPY models/ /root/models
+
 # Set our ENTRYPOINT that ensures `/dev/hailo0` gets created
 ENTRYPOINT ["/usr/local/bin/startup.sh"]
 
 # CMD now starts supervisord
-# CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
 
-CMD ["bash", "-c", "while true; do echo 'idle...'; sleep 30; done"]
+#CMD ["bash", "-c", "while true; do echo 'idle...'; sleep 30; done"]
