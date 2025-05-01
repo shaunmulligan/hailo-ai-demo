@@ -30,24 +30,34 @@ RUN mkdir -p /run/systemd && echo 'docker' > /run/systemd/container
 # We specifically target 4.20.0, other versions should work with the kernel driver but that is untested.
 RUN apt-get install -y --no-install-recommends hailo-all=4.20.0
 
+# Copy our wrapper script that sets up hailo_service process
 COPY hailort_service_wrapper /usr/local/bin/hailort_service_wrapper
 RUN chmod +x /usr/local/bin/hailort_service_wrapper
 
-COPY hailort_service /etc/default/hailort_service
+# Copy in the startup script that runs from ENTRYPOINT
+COPY startup /usr/local/bin/startup
+# Make startup executable
+RUN chmod +x /usr/local/bin/startup
 
-# Copy files
-COPY startup.sh /usr/local/bin/startup.sh
+# Make sure supervisord has the config to start all the specific scripts
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 
-# Make startup.sh executable
-RUN chmod +x /usr/local/bin/startup.sh
+############ Replace these with real inference code ######################
 
+# Copy our AI models into docker context for `test_hailo_infer` to use.
 COPY models/ /root/models
 
+# Copy in our test inference script (Replace with real code)
+COPY test_hailo_infer /usr/local/bin/test_hailo_infer
+RUN chmod +x /usr/local/bin/test_hailo_infer
+
+############ Replace these with real inference code ######################
+
 # Set our ENTRYPOINT that ensures `/dev/hailo0` gets created
-ENTRYPOINT ["/usr/local/bin/startup.sh"]
+ENTRYPOINT ["/usr/local/bin/startup"]
 
 # CMD now starts supervisord
 CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+
 
 #CMD ["bash", "-c", "while true; do echo 'idle...'; sleep 30; done"]

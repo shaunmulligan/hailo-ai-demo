@@ -61,9 +61,9 @@ fi
 
 echo "[HAILO SETUP] Loading module $MODULE_NAME..."
 if modprobe "$MODULE_NAME"; then
-    echo "[HAILO SETUP] ✅ Module loaded successfully"
+    echo "[HAILO SETUP] Module loaded successfully"
 else
-    echo "[HAILO SETUP] ❌ ERROR: Failed to load $MODULE_NAME"
+    echo "[HAILO SETUP] ERROR: Failed to load $MODULE_NAME"
     dmesg | tail -n 20
     exit 1
 fi

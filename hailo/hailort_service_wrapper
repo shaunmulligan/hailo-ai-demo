@@ -16,6 +16,9 @@ for i in $(seq 1 $TIMEOUT); do
 done
 [ -e "$DEVICE" ] || { log "Timeout waiting for $DEVICE"; exit 1; }
 
+# Set our env config for hailort_service
+export HAILORT_LOGGER_PATH="/var/log/hailo"
+export HAILO_MONITOR=1
 # Start the service
 log "Starting hailort_service..."
 /usr/local/bin/hailort_service

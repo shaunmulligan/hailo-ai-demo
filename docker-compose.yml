@@ -1,5 +1,10 @@
 version: '2.4'
 volumes:
+  hailo-uds:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
   firmware-volume:
     driver: local
     driver_opts:
@@ -7,23 +12,13 @@ volumes:
       o: bind,rshared,rw
       device: /run/mount
 services:
-  hailo-infer:
+  hailo-service:
     tty: true
     build:
-      context: ./hailo-infer
-    restart: always
-    devices:
-      - /dev/hailo0:/dev/hailo0
-    depends_on:
-      - hailo-init
-  hailo-init:
-    tty: true
-    build:
-      context: ./hailo-init
+      context: ./hailo
     labels:
       io.balena.features.kernel-modules: '1'
     restart: always
     privileged: true
-    # network_mode: host
     volumes:
       - 'firmware-volume:/data'

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e
+
+# Wait for the socket file to exist
+while [ ! -S /tmp/hailort_uds.sock ]; do
+  echo "Waiting for /tmp/hailort_uds.sock..."
+  sleep 1
+done
+
+# Once the socket exists, run the command.
+exec hailortcli run2 --multi-process-service set-net /root/models/yolov8s-hailo8l.hef set-net /root/models/scrfd_2.5g-hailo8l.hef 
