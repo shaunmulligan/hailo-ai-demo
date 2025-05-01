@@ -1,22 +1,48 @@
 #!/bin/bash
 
-set -a
-[ -f /etc/default/hailort_service ] && . /etc/default/hailort_service
-set +a
-
 DEVICE=/dev/hailo0
-TIMEOUT=5  # seconds
+PIDFILE=/run/hailo/hailort_service.pid
+TIMEOUT=30
 
-echo "Waiting for $DEVICE to become available..."
+log() {
+  echo "[wrapper] $1"
+}
 
+# Wait for the device to appear
+log "Waiting for $DEVICE..."
 for i in $(seq 1 $TIMEOUT); do
-  if [ -e "$DEVICE" ]; then
-    echo "$DEVICE found, starting hailort_service"
-    /usr/local/bin/hailort_service
-    exit $?
+  [ -e "$DEVICE" ] && break
+  sleep 1
+done
+[ -e "$DEVICE" ] || { log "Timeout waiting for $DEVICE"; exit 1; }
+
+# Start the service
+log "Starting hailort_service..."
+/usr/local/bin/hailort_service
+
+# Wait for the PID file to appear
+log "Waiting for PID file: $PIDFILE"
+for i in $(seq 1 $TIMEOUT); do
+  if [ -s "$PIDFILE" ]; then
+    PID=$(cat "$PIDFILE")
+    log "PID file found with PID: $PID"
+    break
   fi
   sleep 1
 done
 
-echo "Timeout waiting for $DEVICE. Exiting."
-exit 1
+if [ -z "$PID" ] || ! ps -p "$PID" > /dev/null 2>&1; then
+  log "Failed to confirm process with PID $PID is running"
+  exit 1
+fi
+
+# Monitor the daemon process — if it dies, we exit so supervisord can restart it
+log "Monitoring process $PID..."
+while true; do
+  if ps -p "$PID" > /dev/null 2>&1; then
+    sleep 5
+  else
+    log "Process $PID exited. Wrapper exiting to allow supervisord to restart."
+    exit 1
+  fi
+done
