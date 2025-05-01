@@ -1,10 +1,5 @@
 version: '2.4'
 volumes:
-  hailo-uds:
-    driver: local
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
   firmware-volume:
     driver: local
     driver_opts:
