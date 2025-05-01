@@ -8,7 +8,6 @@ log() {
   echo "[wrapper] $1"
 }
 
-# Wait for the device to appear
 log "Waiting for $DEVICE..."
 for i in $(seq 1 $TIMEOUT); do
   [ -e "$DEVICE" ] && break
@@ -16,36 +15,37 @@ for i in $(seq 1 $TIMEOUT); do
 done
 [ -e "$DEVICE" ] || { log "Timeout waiting for $DEVICE"; exit 1; }
 
-# Set our env config for hailort_service
+log "Killing any existing hailort_service processes..."
+pkill -f '[h]ailort_service$' || true
+rm -f "$PIDFILE"
+
 export HAILORT_LOGGER_PATH="/var/log/hailo"
 export HAILO_MONITOR=1
-# Start the service
-log "Starting hailort_service..."
-/usr/local/bin/hailort_service
 
-# Wait for the PID file to appear
+log "Starting hailort_service..."
+/usr/local/bin/hailort_service > /var/log/hailort_service.output 2>&1
+
 log "Waiting for PID file: $PIDFILE"
 for i in $(seq 1 $TIMEOUT); do
   if [ -s "$PIDFILE" ]; then
     PID=$(cat "$PIDFILE")
-    log "PID file found with PID: $PID"
-    break
+    if ps -p "$PID" > /dev/null 2>&1; then
+      log "PID file found with live PID: $PID"
+      break
+    fi
   fi
   sleep 1
 done
 
 if [ -z "$PID" ] || ! ps -p "$PID" > /dev/null 2>&1; then
-  log "Failed to confirm process with PID $PID is running"
+  log "Failed to confirm live PID"
   exit 1
 fi
 
-# Monitor the daemon process — if it dies, we exit so supervisord can restart it
-log "Monitoring process $PID..."
-while true; do
-  if ps -p "$PID" > /dev/null 2>&1; then
-    sleep 5
-  else
-    log "Process $PID exited. Wrapper exiting to allow supervisord to restart."
-    exit 1
-  fi
+log "Monitoring PID $PID..."
+while kill -0 "$PID" > /dev/null 2>&1; do
+  sleep 5
 done
+
+echo "[wrapper] hailort_service exited. Exiting wrapper."
+exit 1
