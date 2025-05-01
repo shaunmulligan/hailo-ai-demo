@@ -61,5 +61,5 @@ scrfd_2_5g: fps: 23.23
     - ~~try symlink /tmp/socket into a shared volume for other containers to make use of.~~ This didn't work :(
     - It might be possible if we could configure the path of the socket, have asked about this on the hailo forum: https://community.hailo.ai/t/is-it-possible-to-change-the-default-tmp-hailort-uds-sock-location-for-hailort-service/14340 
 
-- [ ] Try reduce priviledge of container down to SYS_ADMIN only
-- [ ] Try install only hailofw/stable,now 4.20.0-1  and hailort/stable,now 4.20.0-1
+- [x] ~~Try reduce priviledge of container down to SYS_ADMIN only~~ - couldn't get it to work, might be worth splitting the kernel module init into a separate container that the service container depends, but that should only be done when long form `depends_on` is supported in balenaCloud as per [this feature request](https://forums.balena.io/t/service-dependencies/373382/6?u=shaunmulligan1) 
+- [x] Try install only the essential hailo bits rather than full `hailo-all`
