@@ -24,6 +24,6 @@ services:
       io.balena.features.kernel-modules: '1'
     restart: on-failure
     privileged: true
-    network_mode: host
+    # network_mode: host
     volumes:
       - 'firmware-volume:/data'

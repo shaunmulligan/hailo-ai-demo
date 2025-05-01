@@ -70,9 +70,13 @@ fi
 
 # Step 5: Verify device node
 if [[ -e "$DEVICE_PATH" ]]; then
-    echo "[HAILO SETUP] ✅ Hailo device available at $DEVICE_PATH"
+    echo "[HAILO SETUP] Hailo device available at $DEVICE_PATH"
 else
-    echo "[HAILO SETUP] ❌ Hailo device NOT found at $DEVICE_PATH"
+    echo "[HAILO SETUP] Hailo device NOT found at $DEVICE_PATH"
     dmesg | tail -n 20
     exit 1
 fi
+
+echo "Startup complete. Launching supervisord..."
+exec "$@"
+

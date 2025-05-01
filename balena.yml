@@ -1,0 +1,22 @@
+name: balenaHailo
+type: sw.application
+description: >-
+  A reference project for using Hailo8 PCI modules on raspberry pi 5 with balenaCloud
+assets:
+  repository:
+    type: blob.asset
+    data:
+      url: 'https://github.com/shaunmulligan/balena-hailo'
+  logo:
+    type: blob.asset
+    data:
+      url: >-
+        https://raw.githubusercontent.com/shaunmulligan/balena-hailo/master/logo.png
+data:
+  applicationEnvironmentVariables:
+    - SOUND_VOLUME: 75
+    - AUDIO_OUTPUT: AUTO
+  defaultDeviceType: raspberrypi5
+  supportedDeviceTypes:
+    - raspberrypi5
+version: 0.2.2

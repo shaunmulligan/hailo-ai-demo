@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -a
+[ -f /etc/default/hailort_service ] && . /etc/default/hailort_service
+set +a
+
+DEVICE=/dev/hailo0
+TIMEOUT=5  # seconds
+
+echo "Waiting for $DEVICE to become available..."
+
+for i in $(seq 1 $TIMEOUT); do
+  if [ -e "$DEVICE" ]; then
+    echo "$DEVICE found, starting hailort_service"
+    /usr/local/bin/hailort_service
+    exit $?
+  fi
+  sleep 1
+done
+
+echo "Timeout waiting for $DEVICE. Exiting."
+exit 1
